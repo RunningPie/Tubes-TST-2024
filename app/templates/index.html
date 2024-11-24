@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task Manager</title>
+    <link rel="stylesheet" href="/static/css/styles.css">
+</head>
+<body>
+    <h1>Welcome to Task Manager</h1>
+    <h2>This is a Dummy Landing Page</h2>
+    <span>To check the whole API route docs check out </span><span><a href="/docs">docs</a></span>
+    <ul>
+        {% for task in tasks %}
+            <li>{{ task.name }}</li>
+        {% endfor %}
+    </ul>
+    <p>Testing buttons for OAuth</p>
+    <button id="github-login" onclick="window.location.href = '/github-login'">Login with Github</button>
+    <button id="google-login" onclick="window.location.href = '/google-login'">Login with Google</button>
+    <script src="/static/js/main.js"></script>
+</body>
+</html>
