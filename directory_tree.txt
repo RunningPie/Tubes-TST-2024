@@ -1,0 +1,20 @@
+TUBES-TST-2024/
+├── app/
+│   ├── __init__.py
+│   ├── main.py                # FastAPI application
+│   ├── models.py              # Pydantic models or other backend logic
+│   ├── services/
+│   │   ├── supabase.py        # Supabase client and related functions
+│   │   ├── task_manager.py    # Logic for handling tasks
+│   ├── templates/
+│   │   ├── index.html         # Jinja2 templates
+│   │   ├── layout.html        # Base layout template (if needed)
+│   ├── static/
+│   │   ├── css/
+│   │   │   ├── styles.css     # Custom styles
+│   │   ├── js/
+│   │   │   ├── main.js        # JavaScript logic
+├── vercel.json                # Vercel configuration file
+├── .env
+├── requirements.txt           # Python dependencies
+└── README.md                  # Project documentation

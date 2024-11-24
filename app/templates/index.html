@@ -9,15 +9,28 @@
 <body>
     <h1>Welcome to Task Manager</h1>
     <h2>This is a Dummy Landing Page</h2>
-    <span>To check the whole API route docs check out </span><span><a href="/docs">docs</a></span>
-    <ul>
-        {% for task in tasks %}
-            <li>{{ task.name }}</li>
-        {% endfor %}
-    </ul>
+    <span>To check the whole API route docs check out </span><span><a href="/redoc">the documentation</a></span>
+    
+    <!-- Email and Password Form -->
+    <form id="signin-form">
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" required><br><br>
+        
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" required><br><br>
+        
+        <button type="button" id="normal-signin">Normal Signin</button>
+    </form>
+    
+    <p>Don't have an account? <a href="/register">Register here!</a></p>
+    
     <p>Testing buttons for OAuth</p>
-    <button id="github-login" onclick="window.location.href = '/github-login'">Login with Github</button>
-    <button id="google-login" onclick="window.location.href = '/google-login'">Login with Google</button>
+    <button id="github-signin" onclick="window.location.href = '/github-signin'">Signin with Github</button>
+    <button id="google-signin" onclick="window.location.href = '/google-signin'">Signin with Google</button>
+    <p>Disclaimer: the OAuth buttons work, but their session retention still needs some fixing</p>
+    <p>In the meantime, try using the normal signin button</p>
+    
     <script src="/static/js/main.js"></script>
+    
 </body>
 </html>

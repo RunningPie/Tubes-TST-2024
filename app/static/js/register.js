@@ -1,4 +1,4 @@
-document.getElementById('normal-signin').addEventListener('click', function() {
+document.getElementById('normal-signup').addEventListener('click', function() {
     // Get the email and password values from the form
     const email = document.getElementById('email').value;
     const password = document.getElementById('password').value;
@@ -15,14 +15,14 @@ document.getElementById('normal-signin').addEventListener('click', function() {
     headers.append("password", password);
 
     // Send the request using Fetch API
-    fetch('/user-signin', {
+    fetch('/user-signup', {
         method: 'POST',  // Using POST since you're sending data
         headers: headers
     })
     .then(response => {
         if (response.ok) {
             // Handle successful login, for example, redirect to another page
-            window.location.href = '/protected-home';  // Replace with your actual URL
+            window.location.href = '/';  // Replace with your actual URL
         } else {
             alert("Login failed, please try again.");
         }
