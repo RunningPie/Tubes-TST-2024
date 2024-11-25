@@ -8,7 +8,7 @@ import os
 
 load_dotenv()
 
-from app.services.supabase import supabase_router, supabase_callback
+from app.services.supabase import supabase_router
 from app.services.auth import JWTBearer
 
 app = FastAPI(
@@ -38,3 +38,6 @@ def protected_route(request: Request):
     return templates.TemplateResponse("login_success.html", {"request": request})
 
 app.include_router(supabase_router)
+
+for route in app.routes:
+    print(route.path, route.name)
