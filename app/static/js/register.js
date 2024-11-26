@@ -1,4 +1,4 @@
-document.getElementById('normal-signup').addEventListener('click', function() {
+document.getElementById('register').addEventListener('click', function() {
     // Get the email and password values from the form
     const email = document.getElementById('email').value;
     const password = document.getElementById('password').value;
@@ -21,10 +21,10 @@ document.getElementById('normal-signup').addEventListener('click', function() {
     })
     .then(response => {
         if (response.ok) {
-            // Handle successful login, for example, redirect to another page
+            // Handle successful register, for example, redirect to another page
             window.location.href = '/';  // Replace with your actual URL
         } else {
-            alert("Login failed, please try again.");
+            alert("Register failed, please try again.");
         }
     })
     .catch(error => {

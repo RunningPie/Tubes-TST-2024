@@ -11,21 +11,12 @@ supabase_router = APIRouter()
 SUPABASE_URL = os.getenv("SUPABASE_URL")
 SUPABASE_KEY = os.getenv("SUPABASE_KEY")
 
-# print("Supabase URL:", SUPABASE_URL)
 
 # Initialize Supabase client
 # _supabase_client: Optional[Client] = None
 client = create_client(SUPABASE_URL, SUPABASE_KEY)
 
-# def get_supabase_client() -> Client:
-#     global _supabase_client
-#     print(_supabase_client)
-#     if _supabase_client is None:
-#         try:
-#             _supabase_client = create_client(SUPABASE_URL, SUPABASE_KEY)
-#         except Exception as e:
-#             raise HTTPException(status_code=500, detail=f"Failed to connect to Supabase: {str(e)}")
-#     return _supabase_client
+base_url = os.getenv("BASE_URL")
 
 @supabase_router.post("/user-signup", summary="This is used for user signup with classic email and password")
 async def signup(
@@ -55,19 +46,16 @@ async def signin(
         response = client.auth.sign_in_with_password({"email": email, "password": password})
         token = response.session.access_token
         
-        fastapi_response = JSONResponse(content={"message": "User signed in successfully"})
+        fastapi_response = RedirectResponse(url=base_url + "/protected-home", status_code=302)
         fastapi_response.set_cookie(key="access_token", value=token, httponly=True)
         return fastapi_response
+    
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
 @supabase_router.get("/github-signin", summary="This is used for user signup with the help of GitHub OAuth Application")
 async def github_signin(request: Request):
-    print("masuk github_signin")
-    print(client)
     try:
-        # client = get_supabase_client()
-        print(request.url_for("callback"))
         response = client.auth.sign_in_with_oauth(
             {"provider": "github",
              "options": {
@@ -80,7 +68,6 @@ async def github_signin(request: Request):
 
 @supabase_router.get("/google-signin", summary="This is used for user signup with the help of google OAuth Application")
 async def google_signin(request: Request):
-    print("masuk backend google signin")
     try:
         # client = get_supabase_client()
         response = client.auth.sign_in_with_oauth(
@@ -95,7 +82,6 @@ async def google_signin(request: Request):
 
 @supabase_router.get("/user-signout", summary="This is used for user signout")
 async def user_signout(request: Request):
-    print("user logged out")
     try:
         # client = get_supabase_client()
         response = client.auth.sign_out()
@@ -114,10 +100,24 @@ async def user_signout(request: Request):
 def callback(request: Request):
     code = request.query_params.get("code")
     next = request.query_params.get("next", "/protected-home")
-    print(client)
     if code:
         try:
             res = client.auth.exchange_code_for_session({"auth_code": code})
+            
+            # Fixed session token extraction
+            access_token = None
+            if hasattr(res, 'session'):
+                access_token = res.session.access_token
+            elif isinstance(res, dict):
+                access_token = res.get('access_token')
+            
+            if not access_token:
+                raise ValueError("No access token found in response")
+            
+            fastapi_response = RedirectResponse(url=base_url + "/protected-home", status_code=302)
+            fastapi_response.set_cookie(key="access_token", value=access_token, httponly=True)
+            return fastapi_response
+        
         except Exception as e:
             # Pass the error message as a query parameter
             error_message = f"Failed to exchange code for session: {str(e)}"

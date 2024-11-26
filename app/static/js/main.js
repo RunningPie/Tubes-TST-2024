@@ -19,16 +19,4 @@ document.getElementById('normal-signin').addEventListener('click', function() {
         method: 'POST',  // Using POST since you're sending data
         headers: headers
     })
-    .then(response => {
-        if (response.ok) {
-            // Handle successful login, for example, redirect to another page
-            window.location.href = '/protected-home';  // Replace with your actual URL
-        } else {
-            alert("Login failed, please try again.");
-        }
-    })
-    .catch(error => {
-        console.error('Error:', error);
-        alert("An error occurred, please try again later.");
-    });
 });
