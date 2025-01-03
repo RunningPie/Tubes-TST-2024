@@ -7,13 +7,16 @@ TUBES-TST-2024/
 │   │   ├── supabase.py        # Supabase client and related functions
 │   │   ├── task_manager.py    # Logic for handling tasks
 │   ├── templates/
-│   │   ├── index.html         # Jinja2 templates
+│   │   ├── index.html         
+│   │   ├── login_success.html         
+│   │   ├── register.html         
 │   │   ├── layout.html        # Base layout template (if needed)
 │   ├── static/
 │   │   ├── css/
 │   │   │   ├── styles.css     # Custom styles
 │   │   ├── js/
-│   │   │   ├── main.js        # JavaScript logic
+│   │   │   ├── main.js
+│   │   │   ├── register.js
 ├── vercel.json                # Vercel configuration file
 ├── .env
 ├── requirements.txt           # Python dependencies

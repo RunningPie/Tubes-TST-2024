@@ -1,7 +1,7 @@
 from fastapi import Depends, FastAPI
-from fastapi.templating import Jinja2Templates
-from fastapi.staticfiles import StaticFiles
-from fastapi.responses import HTMLResponse
+# from fastapi.templating import Jinja2Templates
+# from fastapi.staticfiles import StaticFiles
+from fastapi.responses import HTMLResponse, JSONResponse
 from fastapi import Request
 from dotenv import load_dotenv
 import os
@@ -19,14 +19,14 @@ app = FastAPI(
     redoc_url="/redoc"  # URL path for the ReDoc docs (optional)
 )
 
-app.mount("/static", StaticFiles(directory="app/static"), name="static")
+# app.mount("/static", StaticFiles(directory="app/static"), name="static")
 
-templates = Jinja2Templates(directory="app/templates")
+# templates = Jinja2Templates(directory="app/templates")
 
-@app.get("/", response_class=HTMLResponse, summary="This is the default route, used for health checking")
+@app.get("/", response_class=JSONResponse, summary="This is the default route, used for health checking")
 async def home(request: Request):
     # Example: Get tasks from Supabase or another service
-    return templates.TemplateResponse("index.html", {"request": request})
+    return {"message": "This is the default route, used for health checking"}
 
 @app.get("/register", response_class=HTMLResponse, summary="This is the route for registration")
 async def register(request: Request):

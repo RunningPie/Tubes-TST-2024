@@ -59,7 +59,7 @@ async def github_signin(request: Request):
         response = client.auth.sign_in_with_oauth(
             {"provider": "github",
              "options": {
-                 "redirect_to": f"{request.url_for("callback")}"
+                 "redirect_to": base_url + "/callback"
              }}
             )
         return RedirectResponse(url=response.url, status_code=302)
@@ -73,7 +73,7 @@ async def google_signin(request: Request):
         response = client.auth.sign_in_with_oauth(
             {"provider": "google",
              "options": {
-                 "redirect_to": f"{request.url_for("callback")}"
+                 "redirect_to": base_url + "/callback"
              }}
             )
         return RedirectResponse(url=response.url, status_code=302)
@@ -85,7 +85,7 @@ async def user_signout(request: Request):
     try:
         # client = get_supabase_client()
         response = client.auth.sign_out()
-        redirect_res = RedirectResponse(url=request.base_url, status_code=302)
+        redirect_res = RedirectResponse(url=base_url, status_code=302)
         
         cookies_to_clear = ['session_id', 'auth_token', 'access_token']
         for cookie_name in cookies_to_clear:
