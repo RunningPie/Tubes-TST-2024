@@ -9,6 +9,7 @@ import os
 load_dotenv()
 
 from app.services.supabase import supabase_router
+from app.services.task_manager import taskmanager_router
 from app.services.auth import JWTBearer
 
 app = FastAPI(
@@ -30,14 +31,17 @@ async def home(request: Request):
 
 @app.get("/register", response_class=HTMLResponse, summary="This is the route for registration")
 async def register(request: Request):
+    pass
     # Example: Get tasks from Supabase or another service
-    return templates.TemplateResponse("register.html", {"request": request})
+    # return templates.TemplateResponse("register.html", {"request": request})
 
 @app.get("/protected-home", dependencies=[Depends(JWTBearer())], summary="This is the default redirect after a successful login, using classic JWT")
 def protected_route(request: Request):
-    return templates.TemplateResponse("login_success.html", {"request": request})
+    pass
+    # return templates.TemplateResponse("login_success.html", {"request": request})
 
 app.include_router(supabase_router)
+app.include_router(taskmanager_router)
 
 for route in app.routes:
     print(route.path, route.name)
