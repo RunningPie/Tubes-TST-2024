@@ -4,6 +4,7 @@ from typing import List, Optional
 from pydantic import BaseModel
 from supabase import Client, create_client
 import os
+import app.services.rule_based_fuzzy_logic as rbfl
 
 taskmanager_router = APIRouter()
 
@@ -45,6 +46,46 @@ def validate_request_json(request_json, *keys_to_validate):
     for key in keys_to_validate:
         if key not in request_json:
             raise HTTPException(status_code=400, detail=f"Missing required key: {key}")
+        
+def determine_task_assignee(team_id, task_priority):
+    req_member_ids = client.table("team_members").select("member_id").eq("team_id", team_id).execute().data
+    team_members = []
+    for member_id in req_member_ids:
+        team_members.append(member_id["member_id"])
+    
+    member_suitabilities = {}
+    for member_id in team_members:
+        print(member_id)
+        req_availability = client.table("availability").select("*").eq("member_id", member_id).execute().data
+        max_available_time = 0
+        for availability in req_availability:
+            start_time = datetime.fromisoformat(availability["start_time"])
+            end_time = datetime.fromisoformat(availability["end_time"])
+            curr_available_time = (end_time - start_time).total_seconds()/3600
+            if curr_available_time > max_available_time:
+                max_available_time = curr_available_time
+        print(f"Member {member_id} has max available time of {max_available_time} for {len(req_availability)} entries")
+        
+        req_tasks = client.table("task").select("*").eq("assigned_to", member_id).execute().data
+        total_priority = 0
+        for task in req_tasks:
+            total_priority += int(task["priority"])
+        print(f"Member {member_id} has total priority of {total_priority} for {len(req_tasks)} tasks")
+        avg_priority = total_priority/len(req_tasks) if len(req_tasks) > 0 else 5
+        
+        suitability_score = rbfl.calculate_suitability(avg_priority, max_available_time)
+        member_suitabilities[member_id] = suitability_score
+    
+    # Sort member suitability scores
+    sorted_suitability_scores = dict(sorted(member_suitabilities.items(), key=lambda item: item[1], reverse=True))
+    print(f"Sorted member suitability scores: {sorted_suitability_scores}")
+    
+    # Ambil member yang memiliki skor tertinggi
+    best_suitable_member = list(sorted_suitability_scores.keys())[:int(task_priority)][-1]
+    print(f"Best suitable member: {best_suitable_member}")
+    
+    return best_suitable_member
+    
 
 # Endpoint: Membuat team baru
 @taskmanager_router.post("/create-team", summary="Create a new team")
@@ -136,13 +177,14 @@ async def add_member_avail(new_avail_details: dict):
     
 # Endpoint: Menambahkan task milik team
 @taskmanager_router.post("/add-team-task", summary="Add a certain team's availability")
-async def add_member_avail(new_task_details: dict):
+async def add_team_task(new_task_details: dict):
     
     # Validate json body
     validate_request_json(new_task_details, "team_id", "task_name", "priority")
     
     new_created_at = datetime.now().isoformat()
-    new_task_assignee = "1"
+    new_task_assignee = determine_task_assignee(team_id=new_task_details["team_id"], task_priority=new_task_details["priority"])
+    print(new_task_assignee)
 
     new_task_data = Task(
         team_id = new_task_details["team_id"],

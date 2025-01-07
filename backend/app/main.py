@@ -37,7 +37,7 @@ async def register(request: Request):
 
 @app.get("/protected-home", dependencies=[Depends(JWTBearer())], summary="This is the default redirect after a successful login, using classic JWT")
 def protected_route(request: Request):
-    pass
+    return {"message": "You have successfully logged in"}
     # return templates.TemplateResponse("login_success.html", {"request": request})
 
 app.include_router(supabase_router)

@@ -29,9 +29,9 @@ def availability_membership(availability):
     print(f"Availability value: {availability}")
     
     # Adjusted trapezoid parameters for 0-12 scale
-    low = trapezoid(availability, 0, 0, 3, 5)
-    medium = trapezoid(availability, 4, 5, 7, 8)
-    high = trapezoid(availability, 7, 9, 12, 12)
+    low = trapezoid(availability, 0, 0, 6, 10)
+    medium = trapezoid(availability, 8, 10, 14, 16)
+    high = trapezoid(availability, 14, 18, 24, 24)
     
     print(f"Availability memberships - low: {low}, medium: {medium}, high: {high}")
     return {"low": low, "medium": medium, "high": high}
@@ -79,15 +79,17 @@ def defuzzify(suitability):
     return result
 
 def calculate_suitability(workload_value, availability_value):
+    print("\nCalculating suitability...")
     workload = workload_membership(workload_value)
     availability = availability_membership(availability_value)
     rules = fuzzy_rules(workload, availability)
     suitability_score = defuzzify(rules)
+    print("\n")
     return suitability_score
 
 # Example usage
 if __name__ == '__main__':
-    workload_value = 1  # High workload (scale 0-5)
-    availability_value = 1  # High availability (scale 0-12)
+    workload_value = 5  # High workload (scale 0-5)
+    availability_value = 12  # High availability (scale 0-12)
     suitability = calculate_suitability(workload_value, availability_value)
     print(f"Final suitability score: {suitability}")
