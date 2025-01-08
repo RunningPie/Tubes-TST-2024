@@ -14,7 +14,7 @@ SUPABASE_KEY = os.getenv("SUPABASE_KEY")
 
 # Initialize Supabase client
 # _supabase_client: Optional[Client] = None
-client = create_client(SUPABASE_URL, SUPABASE_KEY)
+client: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
 
 base_url = os.getenv("BASE_URL")
 
@@ -85,7 +85,7 @@ async def user_signout(request: Request):
     try:
         # client = get_supabase_client()
         response = client.auth.sign_out()
-        redirect_res = RedirectResponse(url=base_url, status_code=302)
+        redirect_res = RedirectResponse(url="http://127.0.0.1:5500/frontend/public/index.html", status_code=302)
         
         cookies_to_clear = ['session_id', 'auth_token', 'access_token']
         for cookie_name in cookies_to_clear:
@@ -114,9 +114,25 @@ def callback(request: Request):
             if not access_token:
                 raise ValueError("No access token found in response")
             
-            fastapi_response = RedirectResponse(url=base_url + "/protected-home", status_code=302)
+            user = client.auth.get_user()
+            print(user)
+            print()
+            print("================================================================")
+            print()
+            for attr in user.__dict__:
+                print(f"{attr}: {user.__dict__[attr]}\n\n")
+
+            user_identities = client.auth.get_user().user.identities
+            print(user_identities)
+            user_fullname = user_identities[0].identity_data["full_name"]
+            print(f"User Fullname: {user_fullname}")
+            
+            # Set fullname dalam cookie
+            fastapi_response = RedirectResponse(url="http://127.0.0.1:5500/frontend/public/login_success.html", status_code=302)
             fastapi_response.set_cookie(key="access_token", value=access_token, httponly=True)
+            fastapi_response.set_cookie(key="user_fullname", value=user_fullname, httponly=False)  # Menyimpan fullname di cookie
             return fastapi_response
+
         
         except Exception as e:
             # Pass the error message as a query parameter

@@ -2,18 +2,11 @@ from fastapi import APIRouter, HTTPException, Depends, Header
 from datetime import datetime
 from typing import List, Optional
 from pydantic import BaseModel
-from supabase import Client, create_client
 import os
 import app.services.rule_based_fuzzy_logic as rbfl
+import app.services.supabase as supabase
 
 taskmanager_router = APIRouter()
-
-# Supabase credentials
-SUPABASE_URL = os.getenv("SUPABASE_URL")
-SUPABASE_KEY = os.getenv("SUPABASE_KEY")
-
-# Initialize Supabase client
-client: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
 
 # Validasi object yang dikirimkan ke database
 class Team(BaseModel):
@@ -48,7 +41,7 @@ def validate_request_json(request_json, *keys_to_validate):
             raise HTTPException(status_code=400, detail=f"Missing required key: {key}")
         
 def determine_task_assignee(team_id, task_priority):
-    req_member_ids = client.table("team_members").select("member_id").eq("team_id", team_id).execute().data
+    req_member_ids = supabase.client.table("team_members").select("member_id").eq("team_id", team_id).execute().data
     team_members = []
     for member_id in req_member_ids:
         team_members.append(member_id["member_id"])
@@ -56,23 +49,27 @@ def determine_task_assignee(team_id, task_priority):
     member_suitabilities = {}
     for member_id in team_members:
         print(member_id)
-        req_availability = client.table("availability").select("*").eq("member_id", member_id).execute().data
+        req_availability = supabase.client.table("availability").select("*").eq("member_id", member_id).execute().data
         total_available_time = 0
         for availability in req_availability:
             start_time = datetime.fromisoformat(availability["start_time"])
             end_time = datetime.fromisoformat(availability["end_time"])
             curr_available_time = (end_time - start_time).total_seconds()/3600
             total_available_time += curr_available_time
-        print(f"Member {member_id} has max available time of {total_available_time} for {len(req_availability)} entries")
+        print(f"Member {member_id} has total available time of {total_available_time} for {len(req_availability)} entries")
         
-        req_tasks = client.table("task").select("*").eq("assigned_to", member_id).execute().data
+        req_tasks = supabase.client.table("task").select("*").eq("assigned_to", member_id).execute().data
         total_priority = 0
         for task in req_tasks:
             total_priority += int(task["priority"])
-        print(f"Member {member_id} has total priority of {total_priority} for {len(req_tasks)} tasks")
         avg_priority = total_priority/len(req_tasks) if len(req_tasks) > 0 else 5
+        print(f"Member {member_id} has average priority of {avg_priority} for {len(req_tasks)} tasks")
         
-        suitability_score = rbfl.calculate_suitability(avg_priority, total_available_time)
+        rbfl_system = rbfl.create_workload_availability_system()
+        suitability_score = rbfl_system.evaluate({
+            "workload": total_available_time,
+            "availability": avg_priority
+        })
         member_suitabilities[member_id] = suitability_score
     
     # Sort member suitability scores
@@ -91,10 +88,10 @@ def determine_task_assignee(team_id, task_priority):
 async def create_team(new_team_details: dict):
     
     # Validate json body
-    validate_request_json(new_team_details, "team_name", "creator_id")
+    validate_request_json(new_team_details, "team_name")
     
     # Membuat id team baru dengan metode auto increment
-    req_team_ids = client.table("teams").select("team_id").execute()
+    req_team_ids = supabase.client.table("teams").select("team_id").execute()
     curr_team_ids = []
     for team_id in req_team_ids.data:
         curr_team_ids.append(team_id["team_id"])
@@ -105,14 +102,21 @@ async def create_team(new_team_details: dict):
     new_team_id = str(int(max_team_id) + 1) # melakukan increment ke max team id
     
     new_created_at = datetime.now().isoformat()
+    # current_user = supabase.client.auth.get_user().user.id
+    # print(current_user)
+    try:
+        new_creator_id = supabase.client.auth.get_user().user.id
+    except AttributeError as e:
+        print(e)
+        raise HTTPException(status_code=401, detail={"message": "You must be logged in to create a team"})
     new_team_data = Team(
         team_id=new_team_id,
         team_name=new_team_details["team_name"],
         created_at=new_created_at,
-        creator_id=new_team_details["creator_id"]
+        creator_id=new_creator_id
     )
     
-    response = client.table("teams").insert(new_team_data.model_dump()).execute()
+    response = supabase.client.table("teams").insert(new_team_data.model_dump()).execute()
     if response:
         return {"message": "Team created successfully", "response": response}
     raise HTTPException(status_code=response.status_code, detail=response.model_dump_json())
@@ -125,7 +129,7 @@ async def add_team_member(new_member_details: dict):
     validate_request_json(new_member_details, "team_id", "member_name")
     
     # Membuat id anggota team baru dengan metode auto increment
-    req_member_ids = client.table("team_members").select("member_id").execute()
+    req_member_ids = supabase.client.table("team_members").select("member_id").execute()
     curr_member_ids = []
     for member_id in req_member_ids.data:
         curr_member_ids.append(member_id["member_id"])
@@ -148,7 +152,7 @@ async def add_team_member(new_member_details: dict):
         created_at=new_created_at,
     )
     
-    response = client.table("team_members").insert(new_member_data.model_dump()).execute()
+    response = supabase.client.table("team_members").insert(new_member_data.model_dump()).execute()
     if response:
         return {"message": "Team member added successfully", "response": response}
     raise HTTPException(status_code=response.status_code, detail=response.model_dump_json())
@@ -169,7 +173,7 @@ async def add_member_avail(new_avail_details: dict):
         created_at = new_created_at
     )
     
-    response = client.table("availability").insert(new_avail_data.model_dump()).execute()
+    response = supabase.client.table("availability").insert(new_avail_data.model_dump()).execute()
     if response:
         return {"message": "Member availability added successfully", "response": response}
     raise HTTPException(status_code=response.status_code, detail=response.model_dump_json())
@@ -193,7 +197,7 @@ async def add_team_task(new_task_details: dict):
         created_at = new_created_at
     )
     
-    response = client.table("task").insert(new_task_data.model_dump()).execute()
+    response = supabase.client.table("task").insert(new_task_data.model_dump()).execute()
     if response:
         return {"message": "Member task added successfully", "response": response}
     raise HTTPException(status_code=response.status_code, detail=response.model_dump_json())
@@ -202,7 +206,7 @@ async def add_team_task(new_task_details: dict):
 @taskmanager_router.get("/show-team-members", summary="Shows team members of a certain team")
 async def show_team_member(team: dict):
     team_id = team["team_id"]
-    response = client.table("team_members")\
+    response = supabase.client.table("team_members")\
         .select("member_name, role")\
         .eq("team_id", team_id)\
         .execute()
@@ -212,9 +216,9 @@ async def show_team_member(team: dict):
     
 # Endpoint: Melihat task dari suatu team
 @taskmanager_router.get("/show-team-tasks", summary="Shows team tasks of a certain team")
-async def show_team_member(team: dict):
+async def show_team_tasks(team: dict):
     team_id = team["team_id"]
-    response = client.table("task")\
+    response = supabase.client.table("task")\
         .select("task_name, priority")\
         .eq("team_id", team_id)\
         .execute()

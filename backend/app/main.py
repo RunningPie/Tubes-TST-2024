@@ -2,6 +2,7 @@ from fastapi import Depends, FastAPI
 # from fastapi.templating import Jinja2Templates
 # from fastapi.staticfiles import StaticFiles
 from fastapi.responses import HTMLResponse, JSONResponse
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi import Request
 from dotenv import load_dotenv
 import os
@@ -18,6 +19,17 @@ app = FastAPI(
     version="1.0.0",  # Version of the API
     docs_url="/docs",  # URL path for the Swagger docs (default is /docs)
     redoc_url="/redoc"  # URL path for the ReDoc docs (optional)
+)
+
+# CORS Middleware
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[
+        "http://127.0.0.1:5500" # Tambahkan URL yang diperlukan di sini
+        ],
+    allow_credentials=True,
+    allow_methods=["*"],  # Mengizinkan semua metode (GET, POST, dll.)
+    allow_headers=["*"],  # Mengizinkan semua header
 )
 
 # app.mount("/static", StaticFiles(directory="app/static"), name="static")

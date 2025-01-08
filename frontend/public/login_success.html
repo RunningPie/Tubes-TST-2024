@@ -4,12 +4,85 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Task Manager</title>
-    <link rel="stylesheet" href="/static/css/styles.css">
+    <link rel="stylesheet" href="/src/css/styles.css">
 </head>
 <body>
-    <h1>Welcome to Task Manager</h1>
+    <h1>Welcome, <span id="userFullname"></span></h1>
     <h2>Your Login was Successful</h2>
-    <span>To check the whole API route docs check out </span><span><a href="/redoc">the documentation</a></span>
-    <p>To go back to landing page click here: <a href="/user-signout">logout</a></p>
+    <span>To check the whole API route docs check out </span>
+    <span><a href="http://127.0.0.1:8000/redoc">the documentation</a></span>
+    <p>To go back to landing page click here: <a href="http://127.0.0.1:8000/user-signout">logout</a></p>
+
+    <h3>Create a New Team</h3>
+    <form id="team-form">
+        <label for="team-name">Team Name:</label>
+        <input type="text" id="team-name" name="team_name" placeholder="Enter your team name" required>
+        <button type="submit">Create Team</button>
+    </form>
+
+    <script>
+        document.getElementById("team-form").addEventListener("submit", async function (event) {
+            event.preventDefault(); // Mencegah form dikirim secara default
+            
+            const teamName = document.getElementById("team-name").value; // Ambil nilai input
+            const requestBody = { team_name: teamName }; // Buat objek JSON
+            
+            try {
+                const response = await fetch("http://127.0.0.1:8000/create-team", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(requestBody)
+                });
+                
+                if (response.ok) {
+                    const result = await response.json();
+                    alert("Team created successfully: " + JSON.stringify(result));
+                } else {
+                    const error = await response.json();
+                    alert("Failed to create team: " + JSON.stringify(error));
+                }
+            } catch (err) {
+                alert("Error: " + err.message);
+            }
+        });
+
+        // Fungsi untuk mengambil cookie berdasarkan nama
+        function getCookie(name) {
+            let value = `; ${document.cookie}`;
+            let parts = value.split(`; ${name}=`);
+            if (parts.length === 2) return parts.pop().split(';').shift();
+            return null;
+        }
+
+        // Fungsi untuk menunggu cookies dan menjalankan kode setelah cookies ada
+        function waitForCookieAndSave() {
+            // Ambil token dari cookies
+            const accessToken = getCookie('access_token');
+
+            // Jika token ada, simpan ke local storage
+            if (accessToken) {
+                localStorage.setItem('access_token', accessToken);
+                console.log('Access token saved to local storage');
+                clearInterval(cookieCheckInterval);  // Hentikan pengecekan cookies setelah ditemukan
+            } else {
+                console.log('Access token not found in cookies');
+            }
+
+            // Ambil fullname dari cookies
+            const userFullname = getCookie('user_fullname');
+
+            // Tampilkan fullname di halaman
+            if (userFullname) {
+                document.getElementById('userFullname').textContent = userFullname;
+                clearInterval(cookieCheckInterval);  // Hentikan pengecekan cookies setelah ditemukan
+            }
+        }
+
+        // Cek cookies setiap 100ms
+        const cookieCheckInterval = setInterval(waitForCookieAndSave, 100);
+
+    </script>
 </body>
 </html>
