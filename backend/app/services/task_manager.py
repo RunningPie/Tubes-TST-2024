@@ -57,14 +57,13 @@ def determine_task_assignee(team_id, task_priority):
     for member_id in team_members:
         print(member_id)
         req_availability = client.table("availability").select("*").eq("member_id", member_id).execute().data
-        max_available_time = 0
+        total_available_time = 0
         for availability in req_availability:
             start_time = datetime.fromisoformat(availability["start_time"])
             end_time = datetime.fromisoformat(availability["end_time"])
             curr_available_time = (end_time - start_time).total_seconds()/3600
-            if curr_available_time > max_available_time:
-                max_available_time = curr_available_time
-        print(f"Member {member_id} has max available time of {max_available_time} for {len(req_availability)} entries")
+            total_available_time += curr_available_time
+        print(f"Member {member_id} has max available time of {total_available_time} for {len(req_availability)} entries")
         
         req_tasks = client.table("task").select("*").eq("assigned_to", member_id).execute().data
         total_priority = 0
@@ -73,7 +72,7 @@ def determine_task_assignee(team_id, task_priority):
         print(f"Member {member_id} has total priority of {total_priority} for {len(req_tasks)} tasks")
         avg_priority = total_priority/len(req_tasks) if len(req_tasks) > 0 else 5
         
-        suitability_score = rbfl.calculate_suitability(avg_priority, max_available_time)
+        suitability_score = rbfl.calculate_suitability(avg_priority, total_available_time)
         member_suitabilities[member_id] = suitability_score
     
     # Sort member suitability scores
