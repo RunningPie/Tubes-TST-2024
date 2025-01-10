@@ -1,3 +1,6 @@
+const global_api_key = "4ce3887f-296d-4e32-a718-80102963bf9a"
+const backend = "https://tubes-tst-2024-production.up.railway.app"
+
 document.getElementById("team-form").addEventListener("submit", async function (event) {
     event.preventDefault(); // Mencegah form dikirim secara default
     

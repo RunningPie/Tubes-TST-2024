@@ -1,3 +1,6 @@
+const global_api_key = "4ce3887f-296d-4e32-a718-80102963bf9a"
+const backend = "https://tubes-tst-2024-production.up.railway.app"
+
 document.getElementById("normal-signin").addEventListener("click", () => {
     const email = document.getElementById("email").value;
     const password = document.getElementById("password").value;

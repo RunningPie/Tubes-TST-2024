@@ -1,3 +1,6 @@
+const global_api_key = "4ce3887f-296d-4e32-a718-80102963bf9a"
+const backend = "https://tubes-tst-2024-production.up.railway.app"
+
 document.getElementById('register').addEventListener('click', function() {
     // Get the email and password values from the form
     const email = document.getElementById('email').value;
