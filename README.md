@@ -18,14 +18,14 @@ dan laporan pengembangan dan dokumentasinya bisa diakses di:
 ## 📊 **1. Business Capability Model**  
 Model ini mencakup kapabilitas bisnis utama TaskHub, mulai dari manajemen jadwal, alokasi tugas, hingga rekomendasi berbasis AI.  
 
-![Business Capability Model](https://github.com/RunningPie/Tubes-TST-2024/tree/main/docs/supporting_images/BCM.png)
+![Business Capability Model](https://github.com/RunningPie/Tubes-TST-2024/blob/main/docs/supporting_images/BCM.png)
 
 ---
 
 ## 🧩 **2. Dekomposisi Subdomain**  
 TaskHub berfokus pada subdomain unik yaitu **Academic Project Management** yang mendukung kolaborasi dan manajemen proyek dengan AI.  
 
-![Dekomposisi Subdomain](https://github.com/RunningPie/Tubes-TST-2024/tree/main/docs/supporting_images/Dekomposisi_Subdomain.png)
+![Dekomposisi Subdomain](https://github.com/RunningPie/Tubes-TST-2024/blob/main/docs/supporting_images/Dekomposisi_Subdomain.png)
 
 ---
 
@@ -35,14 +35,14 @@ TaskHub terdiri dari:
 - **Generic Subdomain:** Cloud Storage, Authentication, dll.  
 - **Supporting Subdomain:** Helpbot, Customizable Templates, dll.  
 
-![Pemetaan Subdomain](https://github.com/RunningPie/Tubes-TST-2024/tree/main/docs/supporting_images/Pemetaan_Subdomain.png)
+![Pemetaan Subdomain](https://github.com/RunningPie/Tubes-TST-2024/blob/main/docs/supporting_images/Pemetaan_Subdomain.png)
 
 ---
 
 ## 🏛 **4. Arsitektur dan Model Proses**  
 Sistem berbasis **layered architecture** dengan tiga lapisan utama: Infrastruktur, Logika Bisnis, dan Presentasi.  
 
-![Arsitektur Sistem](https://github.com/RunningPie/Tubes-TST-2024/tree/main/docs/supporting_images/Arsitektur.png)
+![Arsitektur Sistem](https://github.com/RunningPie/Tubes-TST-2024/blob/main/docs/supporting_images/Arsitektur.png)
 
 ---
 
@@ -58,7 +58,7 @@ Sistem berbasis **layered architecture** dengan tiga lapisan utama: Infrastruktu
 ## 📅 **6. Flow dan Timeline Pengembangan**  
 Tahapan pengembangan dimulai dari setup lingkungan hingga deployment ke Vercel.  
 
-![Flow Pengembangan](https://github.com/RunningPie/Tubes-TST-2024/tree/main/docs/supporting_images/Flow_Pengembangan.png)
+![Flow Pengembangan](https://github.com/RunningPie/Tubes-TST-2024/blob/main/docs/supporting_images/Flow_Pengembangan.png)
 
 ---
 
@@ -95,6 +95,6 @@ Endpoint didokumentasikan dengan laman web berbasis HTML, CSS, dan JS yang terse
 - **Google Drive API:** Mendukung penyimpanan dan pengelolaan dokumen.  
 - **Spotify Bot:** Widget chatbot untuk mendukung kebutuhan pengguna.  
 
-![Chatbot](https://github.com/RunningPie/Tubes-TST-2024/tree/main/docs/supporting_images/Chatbot.png)
+![Chatbot](https://github.com/RunningPie/Tubes-TST-2024/blob/main/docs/supporting_images/Chatbot.png)
 
 🎉 **Terima kasih telah menggunakan TaskHub!**
