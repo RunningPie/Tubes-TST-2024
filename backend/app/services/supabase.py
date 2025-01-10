@@ -60,6 +60,8 @@ async def signup(request: Request):
         email = request.headers.get("email")
         password = request.headers.get("password")
         
+        print(email, password)
+        
         if not email or not password:
             raise HTTPException(status_code=400, detail="Email and Password headers are required")
         
@@ -68,6 +70,7 @@ async def signup(request: Request):
             response = client.auth.sign_up({"email": email, "password": password})
             return response
         except Exception as e:
+            print(e)
             raise HTTPException(status_code=500, detail=str(e))
     else:
         raise HTTPException(status_code=403, detail="Invalid API key")
