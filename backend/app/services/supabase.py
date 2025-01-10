@@ -16,6 +16,7 @@ SUPABASE_KEY = os.getenv("SUPABASE_KEY")
 client: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
 
 base_url = os.getenv("BASE_URL")
+frontend_url = os.getenv("FRONTEND_URL")
 
 def validate_api_key(request: Request):
     requester_domain_origin = request.headers.get("Origin")
@@ -116,7 +117,7 @@ async def user_signout(request: Request):
     try:
         # client = get_supabase_client()
         response = client.auth.sign_out()
-        redirect_res = RedirectResponse(url="http://127.0.0.1:5500/frontend/public/index.html", status_code=302)
+        redirect_res = RedirectResponse(url=frontend_url + "/index.html", status_code=302)
         
         cookies_to_clear = ['session_id', 'auth_token', 'access_token']
         for cookie_name in cookies_to_clear:
@@ -159,7 +160,7 @@ def callback(request: Request):
             print(f"User Fullname: {user_fullname}")
             
             # Set fullname dalam cookie
-            fastapi_response = RedirectResponse(url="http://127.0.0.1:5500/frontend/public/home.html", status_code=302)
+            fastapi_response = RedirectResponse(url=frontend_url + "/home.html", status_code=302)
             fastapi_response.set_cookie(key="access_token", value=access_token, httponly=True)
             fastapi_response.set_cookie(key="user_fullname", value=user_fullname, httponly=False)  # Menyimpan fullname di cookie
             return fastapi_response
