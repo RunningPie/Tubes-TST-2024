@@ -3,33 +3,66 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Task Manager</title>
-    <link rel="stylesheet" href="/src/css/styles.css">
+    <title>TaskHub - Simplify Your Teamwork</title>
+    <link rel="stylesheet" href="../src/css/styles.css">
 </head>
 <body>
-    <h1>Welcome to Task Manager</h1>
-    <h2>This is a Dummy Landing Page</h2>
-    <span>To check the whole API route docs check out </span><span><a href="/redoc">the documentation</a></span>
-    
-    <!-- Email and Password Form -->
-    <form id="signin-form">
-        <label for="email">Email:</label>
-        <input type="email" id="email" name="email" required><br><br>
-        
-        <label for="password">Password:</label>
-        <input type="password" id="password" name="password" required><br><br>
-        
-        <button type="button" id="normal-signin">Normal Signin</button>
-    </form>
+    <header class="main-header">
+        <h1>TaskHub</h1>
+        <p>Simplify your teamwork and boost productivity with TaskHub!</p>
+    </header>
 
-    <p>or</p>
-    <button id="github-signin" onclick="window.location.href = 'http://127.0.0.1:8000/github-signin'">Signin with Github</button>
-    <button id="google-signin" onclick="window.location.href = 'http://127.0.0.1:8000/google-signin'">Signin with Google</button>
-    
-    <p>Don't have an account? <a href="/register">Register here!</a></p>
+    <main>
+        <section class="promo">
+            <h2>Why Choose TaskHub?</h2>
+            <ul>
+                <li>✅ Streamline task allocation and team collaboration.</li>
+                <li>✅ Set goals and monitor team progress with ease.</li>
+                <li>✅ Secure and reliable with seamless integrations.</li>
+            </ul>
+            <p>Get started today and experience the ultimate task management solution!</p>
+        </section>
 
-    
-    <script src="/src/js/main.js"></script>
-    
+        <section class="login">
+            <h2>Get Started</h2>
+            <form id="signin-form">
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" required>
+                
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="password" required>
+                
+                <button type="button" id="normal-signin">Normal Signin</button>
+            </form>
+
+            <p>or</p>
+            <div class="oauth-buttons">
+                <button id="github-signin" onclick="window.location.href = 'http://127.0.0.1:8000/github-signin'">Signin with Github</button>
+                <button id="google-signin" onclick="window.location.href = 'http://127.0.0.1:8000/google-signin'">Signin with Google</button>
+            </div>
+
+            <p>Don't have an account? <a href="register.html">Register here!</a></p>
+        </section>
+
+        <section class="developer-options">
+            <h2>For Developers</h2>
+            <p>Explore our powerful API to integrate TaskHub into your workflow.</p>
+            <a class="button" href="sandbox.html">API Documentation & Sandbox</a>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 TaskHub. All Rights Reserved.</p>
+    </footer>
+
+    <script>
+        window.MUSICMATE_API_KEY = 'mk_ManCVgRi5kXO_wyUmiNQVjdDnfk8J_MS3hU0yDLNwyw';
+    </script>
+    <script src="https://spotify-bot.azurewebsites.net/static/js/widget-loader.js"></script>
+    <script>
+        const global_api_key = "3fce511d-3535-4cf8-aacf-b891eba42c72"
+        const backend = "http://127.0.0.1:8000"
+    </script>
+    <script src="../src/js/index.js"></script>
 </body>
 </html>

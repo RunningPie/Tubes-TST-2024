@@ -2,8 +2,9 @@ from fastapi import APIRouter, Depends, Header, HTTPException, Request, Response
 from fastapi.responses import JSONResponse, RedirectResponse
 from supabase import Client, create_client
 from typing import Optional
+from datetime import datetime
+import uuid
 import os
-from app.services.auth import JWTBearer
 
 supabase_router = APIRouter()
 
@@ -11,12 +12,42 @@ supabase_router = APIRouter()
 SUPABASE_URL = os.getenv("SUPABASE_URL")
 SUPABASE_KEY = os.getenv("SUPABASE_KEY")
 
-
 # Initialize Supabase client
-# _supabase_client: Optional[Client] = None
 client: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
 
 base_url = os.getenv("BASE_URL")
+
+def validate_api_key(request: Request):
+    requester_domain_origin = request.headers.get("Origin")
+    
+    # Lookup domain key in db
+    try:
+        lookup_response = client.table("API_KEYS").select("*").eq("domain", requester_domain_origin).execute().data[0]["key"]
+        print(lookup_response)
+    except Exception as e:
+        print(e)
+        raise HTTPException(status_code=404, detail="Domain not found")
+
+    return lookup_response == request.headers.get("API-Key")
+
+def get_validated_domains():
+    # Lookup domain key in db
+    lookup_response = client.table("API_KEYS").select("domain").execute().data
+    
+    return [domain["domain"] for domain in lookup_response]
+
+@supabase_router.post("/request-api-key", summary="This is used for user signup with classic email and password")
+async def request_api_key(request: Request):
+    request_body = await request.json()
+    
+    # Generate API key and save it in db
+    try:
+        new_key = str(uuid.uuid4())
+        client.table("API_KEYS").insert({"domain": request_body["domain"], "key": new_key, "created_at": datetime.now().isoformat()}).execute()
+        return {"message": "API key generated successfully", "key": new_key}
+    except Exception as e:
+        print(e)
+        raise HTTPException(status_code=500, detail="Failed to generate API key")
 
 @supabase_router.post("/user-signup", summary="This is used for user signup with classic email and password")
 async def signup(
@@ -128,7 +159,7 @@ def callback(request: Request):
             print(f"User Fullname: {user_fullname}")
             
             # Set fullname dalam cookie
-            fastapi_response = RedirectResponse(url="http://127.0.0.1:5500/frontend/public/login_success.html", status_code=302)
+            fastapi_response = RedirectResponse(url="http://127.0.0.1:5500/frontend/public/home.html", status_code=302)
             fastapi_response.set_cookie(key="access_token", value=access_token, httponly=True)
             fastapi_response.set_cookie(key="user_fullname", value=user_fullname, httponly=False)  # Menyimpan fullname di cookie
             return fastapi_response

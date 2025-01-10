@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Sandbox - TaskHub</title>
+    <link rel="stylesheet" href="../src/css/styles.css">
+</head>
+<body>
+    <header class="main-header">
+        <h1>TaskHub API Sandbox</h1>
+        <p>Experiment with our API and see how TaskHub can streamline your workflows.</p>
+    </header>
+
+    <main>
+        <section class="intro">
+            <h2>About TaskHub API</h2>
+            <p>The TaskHub API allows you to integrate task management and collaboration features into your own applications.</p>
+            <p>We provide descriptions and use cases below for each endpoints, along with their preferred request body contents.</p>
+        </section>
+
+        <section class="endpoints">
+            <h2>API Endpoints</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Endpoint</th>
+                        <th>HTTP Method</th>
+                        <th>Description</th>
+                        <th>Required Request Body</th>
+                        <th>Guide</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>/create-team</code></td>
+                        <td>POST</td>
+                        <td>Creates a new team.</td>
+                        <td><code>{ "team_name": "string (any string you want)" }</code></td>
+                        <td>Call this to create a team for your service.</td>
+                    </tr>
+                    <tr>
+                        <td><code>/add-team-member</code></td>
+                        <td>POST</td>
+                        <td>Adds a member to a specific team.</td>
+                        <td><code>{ "team_id": "string (get this from the create-team endpoint)",<br>"member_name": "string (name of the member)" }</code></td>
+                        <td>Use this to add a new member to your team.</td>
+                    </tr>
+                    <tr>
+                        <td><code>/add-members-availability</code></td>
+                        <td>POST</td>
+                        <td>Sets the availability of a team member.</td>
+                        <td><code>{ <br>"member_id": "string (ID of the member)",<br>"start_time": "timestamp",<br>"end_time": "timestamp"<br>}</code></td>
+                        <td>Use this to define the days a team member is available.</td>
+                    </tr>
+                    <tr>
+                        <td><code>/add-team-task</code></td>
+                        <td>POST</td>
+                        <td>Adds tasks to a specific team.</td>
+                        <td><code>{ "team_id": "string (get this from the create-team endpoint)",<br>"task_name": "string (any string you want)",<br>"priority": "string (any digit from 1 to 4)" }</code></td>
+                        <td>Use this after creating a team to manage tasks. Our Fuzzy Rule Based System will automatically assign the new tasks to the most suitable member in the team.</td>
+                    </tr>
+                    <tr>
+                        <td><code>/show-teams</code></td>
+                        <td>GET</td>
+                        <td>Returns a list of teams for the logged-in user.</td>
+                        <td>None</td>
+                        <td>Use this to fetch and display team data.</td>
+                    </tr>
+                    <tr>
+                        <td><code>/show-team-members?team_id="X"</code></td>
+                        <td>GET</td>
+                        <td>Returns a list of members in a specific team. Specify the team id in the URL query parameters</td>
+                        <td>None</td>
+                        <td>Use this to view the members of a team.</td>
+                    </tr>
+                    <tr>
+                        <td><code>/show-team-tasks?team_id="X"</code></td>
+                        <td>GET</td>
+                        <td>Returns a list of tasks in a specific team. Specify the team id in the URL query parameters</td>
+                        <td>None</td>
+                        <td>Use this to view all tasks associated with a team.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section class="rbfl-endpoints">
+            <h2>Rule Based Fuzzy Logic API Endpoints</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Endpoint</th>
+                        <th>HTTP Method</th>
+                        <th>Description</th>
+                        <th>Required Request Body</th>
+                        <th>Guide</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>/create-rbfl</code></td>
+                        <td>POST</td>
+                        <td>Create a new rule based fuzzy logic for your service</td>
+                        <td><code>{<br>
+                            "variable1_name": "string (any string you want)",<br>
+                            "variable1_min": "integer (the minimum value for the first variable)",<br>
+                            "variable1_max": "integer (the maximum value for the first variable)",<br>
+                            "variable2_name": "string (any string you want)",<br>
+                            "variable2_min": "integer (the minimum value for the second variable)",<br>
+                            "variable2_max": "integer (the maximum value for the second variable)"<br>
+                        }</code></td>
+                        <td>Call this to create a new rule based fuzzy logic for your service. We currently only support 2 predictive variables to generate the rules and the scale of the variables must be scale positively.</td>
+                    </tr>
+                    <tr>
+                        <td><code>/rbfl-evaluate?id=(uuid)</code></td>
+                        <td>GET</td>
+                        <td>Adds a member to a specific team.</td>
+                        <td>NONE</td>
+                        <td>Evaluates your rules against a new object with the variables you've set before. Just make sure to attach the correct RBFL id.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section class="try-api">
+            <h2>Try the API</h2>
+            <p>Select an endpoint and fill in the required data to test it in real time.</p>
+            <form id="api-form">
+                <label for="endpoint">Endpoint:</label>
+                <select id="endpoint" name="endpoint">
+                    <option value="/create-team">/create-team</option>
+                    <option value="/add-team-member">/add-team-member</option>
+                    <option value="/add-members-availability">/add-members-availability</option>
+                    <option value="/add-team-task">/add-team-task</option>
+                    <option value="/show-teams">/show-teams</option>
+                    <option value="/show-team-members">/show-team-members</option>
+                    <option value="/show-team-tasks">/show-team-tasks</option>
+                    <option value="/create-rbfl">/create-rbfl</option>
+                    <option value="/rbfl-evaluate">/rbfl-evaluate</option>
+                </select>
+
+                <label for="http-method">HTTP Method:</label>
+                <select id="http-method" name="http-method">
+                    <option value="POST">POST</option>
+                    <option value="GET">GET</option>
+                </select>
+
+                <label for="request-body">Request Body (JSON):</label>
+                <textarea id="request-body" name="request-body" rows="5" placeholder='{"key": "value"}'></textarea>
+
+                <button type="button" id="try-endpoint">Send Request</button>
+            </form>
+            <div id="response-container">
+                <h3>Response</h3>
+                <pre id="response-output">Select an endpoint and click "Send Request" to see the response here.</pre>
+            </div>
+        </section>
+
+        <section class="start-now">
+            <h2>Login to Get Your Own API KEY and Start Developing with Us!</h2>
+            <div class="oauth-buttons">
+                <button id="github-signin" onclick="window.location.href = 'http://127.0.0.1:8000/github-signin'">Signin with Github</button>
+                <button id="google-signin" onclick="window.location.href = 'http://127.0.0.1:8000/google-signin'">Signin with Google</button>
+            </div>
+        </section>
+
+        <a class="button" href="index.html">Back Home</a>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 TaskHub. All Rights Reserved.</p>
+    </footer>
+
+    <script>
+        window.MUSICMATE_API_KEY = 'mk_ManCVgRi5kXO_wyUmiNQVjdDnfk8J_MS3hU0yDLNwyw';
+    </script>
+    <script src="https://spotify-bot.azurewebsites.net/static/js/widget-loader.js"></script>
+    <script>
+        const global_api_key = "3fce511d-3535-4cf8-aacf-b891eba42c72"
+        const backend = "http://127.0.0.1:8000"
+    </script>
+    <script src="../src/js/sandbox.js"></script>
+</body>
+</html>

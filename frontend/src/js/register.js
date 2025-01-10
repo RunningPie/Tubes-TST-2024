@@ -13,16 +13,17 @@ document.getElementById('register').addEventListener('click', function() {
     const headers = new Headers();
     headers.append("email", email);
     headers.append("password", password);
+    headers.append("API-Key",)
 
     // Send the request using Fetch API
-    fetch('/user-signup', {
+    fetch(backend + '/user-signup', {
         method: 'POST',  // Using POST since you're sending data
         headers: headers
     })
     .then(response => {
         if (response.ok) {
             // Handle successful register, for example, redirect to another page
-            window.location.href = '/';  // Replace with your actual URL
+            window.location.href = 'index.html';  // Replace with your actual URL
         } else {
             alert("Register failed, please try again.");
         }

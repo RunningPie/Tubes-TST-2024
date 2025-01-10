@@ -8,7 +8,7 @@
       "region": "us-west2",
       "runtime": "V2",
       "numReplicas": 1,
-      "sleepApplication": false,
+      "sleepApplication": true,
       "multiRegionConfig": {
         "us-west2": {
           "numReplicas": 1

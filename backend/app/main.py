@@ -1,4 +1,4 @@
-from fastapi import Depends, FastAPI
+from fastapi import Depends, FastAPI, Request
 # from fastapi.templating import Jinja2Templates
 # from fastapi.staticfiles import StaticFiles
 from fastapi.responses import HTMLResponse, JSONResponse
@@ -9,9 +9,9 @@ import os
 
 load_dotenv()
 
-from app.services.supabase import supabase_router
+from app.services.supabase import supabase_router, get_validated_domains
 from app.services.task_manager import taskmanager_router
-from app.services.auth import JWTBearer
+from app.services.simple_rbfl_system import rbfl_router
 
 app = FastAPI(
     title="TaskHub-Hazel's API Documentation",  # Title of the API
@@ -21,12 +21,13 @@ app = FastAPI(
     redoc_url="/redoc"  # URL path for the ReDoc docs (optional)
 )
 
+allowed_origins = get_validated_domains()
+print(allowed_origins)
+
 # CORS Middleware
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[
-        "http://127.0.0.1:5500" # Tambahkan URL yang diperlukan di sini
-        ],
+    allow_origins=allowed_origins,
     allow_credentials=True,
     allow_methods=["*"],  # Mengizinkan semua metode (GET, POST, dll.)
     allow_headers=["*"],  # Mengizinkan semua header
@@ -41,19 +42,20 @@ async def home(request: Request):
     # Example: Get tasks from Supabase or another service
     return {"message": "This is the default route, used for health checking"}
 
-@app.get("/register", response_class=HTMLResponse, summary="This is the route for registration")
-async def register(request: Request):
-    pass
-    # Example: Get tasks from Supabase or another service
-    # return templates.TemplateResponse("register.html", {"request": request})
+# @app.get("/register", response_class=HTMLResponse, summary="This is the route for registration")
+# async def register(request: Request):
+#     pass
+#     # Example: Get tasks from Supabase or another service
+#     # return templates.TemplateResponse("register.html", {"request": request})
 
-@app.get("/protected-home", dependencies=[Depends(JWTBearer())], summary="This is the default redirect after a successful login, using classic JWT")
+@app.get("/protected-home", summary="This is the default redirect after a successful login, using classic JWT")
 def protected_route(request: Request):
-    return {"message": "You have successfully logged in"}
+    return {"message": "This is a fallback page. You have successfully logged in but the frontend is likely responding"}
     # return templates.TemplateResponse("login_success.html", {"request": request})
 
 app.include_router(supabase_router)
 app.include_router(taskmanager_router)
+app.include_router(rbfl_router)
 
 for route in app.routes:
     print(route.path, route.name)

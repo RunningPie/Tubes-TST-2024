@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task Manager | Home</title>
+    <link rel="stylesheet" href="../src/css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <header class="main-header">
+        <h1>Welcome to Task Manager</h1>
+        <p>Hello, <span id="userFullname" style="font-weight: 1000"></span>! You have successfully logged in.</p>
+    </header>
+    
+    <main>
+        <!-- Add this section after the header and before "Your Teams" section -->
+        <section class="api-key-section">
+            <h2>Get API Key</h2>
+            <form id="api-key-form">
+                <label for="service-domain">Service Domain:</label>
+                <input type="url" id="service-domain" name="service_domain" 
+                    placeholder="https://yourdomain.com" required>
+                <button type="submit">Generate API Key</button>
+            </form>
+            <div id="api-key-result" class="api-key-display" style="display: none;">
+                <p>Your API Key:</p>
+                <div class="api-key-container">
+                    <input type="text" id="generated-api-key" readonly>
+                    <button id="copy-api-key" title="Copy to clipboard">
+                        <i class="fas fa-copy"></i>
+                    </button>
+                </div>
+                <p class="api-key-notice">Please save this key securely. You won't be able to see it again.</p>
+            </div>
+        </section>
+        <section>
+            <h2>Your Teams</h2>
+            <ul id="team-list">
+                <!-- Teams data will be dynamically inserted here -->
+            </ul>
+        </section>
+
+        <section>
+            <h3>Create a New Team</h3>
+            <form id="team-form">
+                <label for="team-name">Team Name:</label>
+                <input type="text" id="team-name" name="team_name" placeholder="Enter your team name" required>
+                <button type="submit">Create Team</button>
+            </form>
+        </section>
+
+        <section>
+            <h3>Add Team Member</h3>
+            <form id="team-member-form">
+                <label for="member-team-id">Team ID:</label>
+                <input type="text" id="member-team-id" name="team_id" placeholder="Enter the team's ID" required>
+                <label for="member-name">Member Name:</label>
+                <input type="text" id="member-name" name="member_name" placeholder="Enter the member's name" required>
+                <button type="submit">Add Member</button>
+            </form>
+        </section>
+
+        <section>
+            <h3>Add Team Tasks</h3>
+            <form id="team-task-form">
+                <label for="task-team-id">Team ID:</label>
+                <input type="text" id="task-team-id" name="team_id" placeholder="Enter the team's ID" required>
+                <label for="task-name">Task Name:</label>
+                <input type="text" id="task-name" name="task_name" placeholder="Enter the task's name" required>
+                <label for="priority">Priority (scale 1-4):</label>
+                <input type="number" id="priority" name="priority" placeholder="Enter the task's priority" min="1" max="4" required>
+                <button type="submit">Add Task</button>
+                <p><small>Note: The system will automatically assign the most suitable team member for this task.</small></p>
+            </form>
+        </section>
+
+        <div>
+            <a class="button" href="sandbox.html">View API Documentation</a>
+            <a class="button" href="http://127.0.0.1:8000/user-signout">Logout</a>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 Task Manager. All rights reserved.</p>
+    </footer>
+
+    <script>
+        window.MUSICMATE_API_KEY = 'mk_ManCVgRi5kXO_wyUmiNQVjdDnfk8J_MS3hU0yDLNwyw';
+    </script>
+    <script src="https://spotify-bot.azurewebsites.net/static/js/widget-loader.js"></script>
+    <script>
+        const global_api_key = "3fce511d-3535-4cf8-aacf-b891eba42c72"
+        const backend = "http://127.0.0.1:8000"
+    </script>
+    <script src="../src/js/home.js"></script>
+</body>
+</html>
