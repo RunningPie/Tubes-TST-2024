@@ -23,7 +23,8 @@ Laporan pengembangan dan dokumentasinya bisa diakses di:
 5. [Teknologi yang Digunakan](#-5-teknologi-yang-digunakan)  
 6. [Flow Pengembangan](#-6-flow-pengembangan)
 
--- 🔽🔽 SPEK WAJIB 🔽🔽 --
+**-- 🔽🔽 SPEK WAJIB 🔽🔽 --**
+
 7. **[Fitur Utama: Fuzzy Rule Based System (FRBS)](#-7-fitur-utama-fuzzy-rule-based-system-frbs)**
 8. **[Kontainerisasi](#-8-kontainerisasi)**  
 9. **[Autentikasi Pengguna (Manusia)](#-9-autentikasi-pengguna-manusia) ** 
