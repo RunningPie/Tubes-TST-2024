@@ -24,13 +24,23 @@ document.getElementById('register').addEventListener('click', function() {
     .then(response => {
         if (response.ok) {
             // Handle successful register, for example, redirect to another page
-            window.location.href = 'index.html';  // Replace with your actual URL
+            window.location.href = 'index.html';
         } else {
-            alert("Register failed, please try again.");
+            response.json().then(data => {
+                if (data.detail) {
+                    // Show the specific error message from the response
+                    alert(data.detail);
+                } else {
+                    alert("Register failed, please try again.");
+                }
+            }).catch(() => {
+                alert("Unable to parse the response. Please try again.");
+            });
         }
     })
     .catch(error => {
         console.error('Error:', error);
         alert("An error occurred, please try again later.");
     });
+    
 });
