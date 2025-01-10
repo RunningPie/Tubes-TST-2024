@@ -10,8 +10,25 @@ Bisa diakses di:
 - **Frontend Deployment:** [TaskHub Frontend](https://taskhub-tst.vercel.app/)  
 - **Backend Deployment:** [TaskHub Backend](https://tubes-tst-2024-production.up.railway.app/)  
 
-dan laporan pengembangan dan dokumentasinya bisa diakses di:
+Laporan pengembangan dan dokumentasinya bisa diakses di:
 - **GDocs Laporan:** [TaskHub Report](https://docs.google.com/document/d/1uDZXZT3-4li0obyQDzyl-8Is3cpIAbl2/edit?usp=sharing&ouid=116101569598927163108&rtpof=true&sd=true)  
+
+---
+
+## 📑 Daftar Isi  
+1. [Business Capability Model](#-1-business-capability-model)  
+2. [Dekomposisi Subdomain](#-2-dekomposisi-subdomain)  
+3. [Fungsi Subdomain](#-3-fungsi-subdomain)  
+4. [Arsitektur dan Model Proses](#-4-arsitektur-dan-model-proses)  
+5. [Teknologi yang Digunakan](#-5-teknologi-yang-digunakan)  
+6. [Flow Pengembangan](#-6-flow-pengembangan)
+-- 🔽🔽 SPEK WAJIB 🔽🔽 --
+7. **[Fitur Utama: Fuzzy Rule Based System (FRBS)](#-7-fitur-utama-fuzzy-rule-based-system-frbs)**
+8. **[Kontainerisasi](#-8-kontainerisasi)**  
+9. **[Autentikasi Pengguna (Manusia)](#-9-autentikasi-pengguna-manusia) ** 
+10. **[Autentikasi API](#-10-autentikasi-api)  **
+11. **[Dokumentasi API](#-11-dokumentasi-api)  **
+12. **[Integrasi dengan Layanan Lain](#-12-integrasi-dengan-layanan-lain) ** 
 
 ---
 
