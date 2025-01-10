@@ -98,7 +98,7 @@ async def signin(
             response = client.auth.sign_in_with_password({"email": email, "password": password})
             token = response.session.access_token
             
-            fastapi_response = RedirectResponse(url=base_url + "/protected-home", status_code=302)
+            fastapi_response = RedirectResponse(url=frontend_url + "/home.html", status_code=302)
             fastapi_response.set_cookie(key="access_token", value=token, httponly=True)
             return fastapi_response
         
