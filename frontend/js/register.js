@@ -12,16 +12,14 @@ document.getElementById('register').addEventListener('click', function() {
         return;
     }
 
-    // Prepare the request headers with the email and password
-    const headers = new Headers();
-    headers.append("email", email);
-    headers.append("password", password);
-    headers.append("API-Key", global_api_key)
-
     // Send the request using Fetch API
     fetch(backend + '/user-signup', {
-        method: 'POST',  // Using POST since you're sending data
-        headers: headers
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "API-Key": global_api_key
+        },
+        body: JSON.stringify({ email, password }),
     })
     .then(response => {
         if (response.ok) {

@@ -41,7 +41,9 @@ def get_validated_domains():
 @supabase_router.post("/request-api-key", summary="This is used for user signup with classic email and password")
 async def request_api_key(request: Request):
     if validate_api_key(request):
-        request_body = await request.json()
+        req_body = await request.json()
+        email = req_body['email']
+        password = req_body['password']
         
         # Generate API key and save it in db
         try:
@@ -57,8 +59,9 @@ async def request_api_key(request: Request):
 @supabase_router.post("/user-signup", summary="This is used for user signup with classic email and password")
 async def signup(request: Request):
     if validate_api_key(request):
-        email = request.headers.get("email")
-        password = request.headers.get("password")
+        req_body = await request.json()
+        email = req_body['email']
+        password = req_body['password']
         
         print(email, password)
         
