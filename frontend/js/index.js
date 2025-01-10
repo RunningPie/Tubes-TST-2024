@@ -10,7 +10,7 @@ document.getElementById("normal-signin").addEventListener("click", () => {
         return;
     }
 
-    fetch(backend + "/login", {
+    fetch(backend + "/user-signin", {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
