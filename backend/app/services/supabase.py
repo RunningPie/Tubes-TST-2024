@@ -40,51 +40,62 @@ def get_validated_domains():
 
 @supabase_router.post("/request-api-key", summary="This is used for user signup with classic email and password")
 async def request_api_key(request: Request):
-    request_body = await request.json()
-    
-    # Generate API key and save it in db
-    try:
-        new_key = str(uuid.uuid4())
-        client.table("API_KEYS").insert({"domain": request_body["domain"], "key": new_key, "created_at": datetime.now().isoformat()}).execute()
-        return {"message": "API key generated successfully", "key": new_key}
-    except Exception as e:
-        print(e)
-        raise HTTPException(status_code=500, detail="Failed to generate API key")
+    if validate_api_key(request):
+        request_body = await request.json()
+        
+        # Generate API key and save it in db
+        try:
+            new_key = str(uuid.uuid4())
+            client.table("API_KEYS").insert({"domain": request_body["domain"], "key": new_key, "created_at": datetime.now().isoformat()}).execute()
+            return {"message": "API key generated successfully", "key": new_key}
+        except Exception as e:
+            print(e)
+            raise HTTPException(status_code=500, detail="Failed to generate API key")
+    else:
+        raise HTTPException(status_code=403, detail="Invalid API key")
 
 @supabase_router.post("/user-signup", summary="This is used for user signup with classic email and password")
 async def signup(
     email: str = Header(...),
-    password: str = Header(...)
+    password: str = Header(...),
+    request: Request
 ):
-    if not email or not password:
-        raise HTTPException(status_code=400, detail="Email and Password headers are required")
-    
-    try:
-        # client = get_supabase_client()
-        response = client.auth.sign_up({"email": email, "password": password})
-        return response
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+    if validate_api_key(request):
+        if not email or not password:
+            raise HTTPException(status_code=400, detail="Email and Password headers are required")
+        
+        try:
+            # client = get_supabase_client()
+            response = client.auth.sign_up({"email": email, "password": password})
+            return response
+        except Exception as e:
+            raise HTTPException(status_code=500, detail=str(e))
+    else:
+        raise HTTPException(status_code=403, detail="Invalid API key")
 
 @supabase_router.post("/user-signin", summary="This is used for user signin with classic email and password")
 async def signin(
     email: str = Header(...),
-    password: str = Header(...)
+    password: str = Header(...),
+    request: Request
 ):
-    if not email or not password:
-        raise HTTPException(status_code=400, detail="Email and Password headers are required")
-    
-    try:
-        # client = get_supabase_client()
-        response = client.auth.sign_in_with_password({"email": email, "password": password})
-        token = response.session.access_token
+    if validate_api_key(request):
+        if not email or not password:
+            raise HTTPException(status_code=400, detail="Email and Password headers are required")
         
-        fastapi_response = RedirectResponse(url=base_url + "/protected-home", status_code=302)
-        fastapi_response.set_cookie(key="access_token", value=token, httponly=True)
-        return fastapi_response
-    
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+        try:
+            # client = get_supabase_client()
+            response = client.auth.sign_in_with_password({"email": email, "password": password})
+            token = response.session.access_token
+            
+            fastapi_response = RedirectResponse(url=base_url + "/protected-home", status_code=302)
+            fastapi_response.set_cookie(key="access_token", value=token, httponly=True)
+            return fastapi_response
+        
+        except Exception as e:
+            raise HTTPException(status_code=500, detail=str(e))
+    else:
+        raise HTTPException(status_code=403, detail="Invalid API key")
 
 @supabase_router.get("/github-signin", summary="This is used for user signup with the help of GitHub OAuth Application")
 async def github_signin(request: Request):

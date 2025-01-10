@@ -16,7 +16,7 @@ document.getElementById('register').addEventListener('click', function() {
     const headers = new Headers();
     headers.append("email", email);
     headers.append("password", password);
-    headers.append("API-Key",)
+    headers.append("API-Key", global_api_key)
 
     // Send the request using Fetch API
     fetch(backend + '/user-signup', {
