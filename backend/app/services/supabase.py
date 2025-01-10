@@ -24,7 +24,7 @@ def validate_api_key(request: Request):
     # Lookup domain key in db
     try:
         lookup_response = client.table("API_KEYS").select("*").eq("domain", requester_domain_origin).execute().data[0]["key"]
-        print(requester_domain_origin)
+        print(request.headers.get("API-Key"))
         print(lookup_response)
     except Exception as e:
         print(e)
