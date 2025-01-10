@@ -118,18 +118,6 @@ function waitForCookieAndSave() {
     }
 }
 
-// Cek login utk mengakses home
-document.addEventListener('DOMContentLoaded', () => {
-    const requiredCookie = 'access_token';
-    const cookieValue = getCookie(requiredCookie);
-
-    // Redirect if the cookie is missing or invalid
-    if (!cookieValue) {
-        alert('You must be logged in to access this page.');
-        window.location.href = 'index.html'; // Redirect to the login page
-    }
-});
-
 // Cek cookies setiap 100ms
 const cookieCheckInterval = setInterval(waitForCookieAndSave, 100);
 

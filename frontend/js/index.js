@@ -17,14 +17,15 @@ document.getElementById("normal-signin").addEventListener("click", () => {
             "API-Key": global_api_key
         },
         body: JSON.stringify({ email, password }),
+        credentials: "include"
     })
         .then((response) => response.json())
         .then((data) => {
             if (data.success) {
-                alert("Login successful!");
+                console.log("Login successful!");
                 window.location.href = "home.html";
             } else {
-                alert("Login failed: " + data.message);
+                console.log("Login failed: " + data.message);
             }
         })
         .catch((error) => console.error("Error:", error));
