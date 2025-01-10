@@ -1,4 +1,4 @@
-const global_api_key = "4ce3887f-296d-4e32-a718-80102963bf9a"
+const global_api_key = "426343da-fa63-4f8c-b288-badbdca5f74f"
 const backend = "https://tubes-tst-2024-production.up.railway.app"
 
 document.getElementById('register').addEventListener('click', function() {
