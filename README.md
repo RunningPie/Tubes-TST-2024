@@ -27,10 +27,10 @@ Laporan pengembangan dan dokumentasinya bisa diakses di:
 
 7. **[Fitur Utama: Fuzzy Rule Based System (FRBS)](#-7-fitur-utama-fuzzy-rule-based-system-frbs)**
 8. **[Kontainerisasi](#-8-kontainerisasi)**  
-9. **[Autentikasi Pengguna (Manusia)](#-9-autentikasi-pengguna-manusia) ** 
-10. **[Autentikasi API](#-10-autentikasi-api)  **
-11. **[Dokumentasi API](#-11-dokumentasi-api)  **
-12. **[Integrasi dengan Layanan Lain](#-12-integrasi-dengan-layanan-lain) ** 
+9. **[Autentikasi Pengguna (Manusia)](#-9-autentikasi-pengguna-manusia)** 
+10. **[Autentikasi API](#-10-autentikasi-api)**
+11. **[Dokumentasi API](#-11-dokumentasi-api)**
+12. **[Integrasi dengan Layanan Lain](#-12-integrasi-dengan-layanan-lain)** 
 
 ---
 
