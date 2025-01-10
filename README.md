@@ -55,7 +55,7 @@ Sistem berbasis **layered architecture** dengan tiga lapisan utama: Infrastruktu
 
 ---
 
-## 📅 **6. Flow dan Timeline Pengembangan**  
+## 📅 **6. Flow Pengembangan**  
 Tahapan pengembangan dimulai dari setup lingkungan hingga deployment ke Vercel.  
 
 ![Flow Pengembangan](https://github.com/RunningPie/Tubes-TST-2024/blob/main/docs/supporting_images/Flow_Pengembangan.png)
@@ -72,17 +72,37 @@ Kode implementasi tersedia di [repository GitHub](https://github.com/RunningPie/
 ---
 
 ## 📦 **8. Kontainerisasi**  
-Layanan backend dikontainerisasi menggunakan Docker untuk mempermudah deployment.  
+Layanan backend dikontainerisasi menggunakan Docker untuk mempermudah deployment.
+
+[>> Cek Dockerfile <<](https://github.com/RunningPie/Tubes-TST-2024/blob/main/backend/dockerfile)
 
 ---
 
-## 🔑 **9. Autentikasi**  
+## 🔑 **9. Autentikasi Pengguna (Manusia)**  
 Autentikasi berbasis Supabase dengan opsi login tradisional dan OAuth (GitHub, Google).  
 
 ---
 
 ## 🔐 **10. Autentikasi API**  
-Validasi API key diterapkan untuk memastikan keamanan komunikasi antar layanan.  
+Validasi API key diterapkan untuk memastikan keamanan komunikasi antar layanan.
+
+Potongan kode fungsi validasinya:
+
+```
+def validate_api_key(request: Request):
+    requester_domain_origin = request.headers.get("Origin")
+    
+    # Lookup domain key in db
+    try:
+        lookup_response = client.table("API_KEYS").select("*").eq("domain", requester_domain_origin).execute().data[0]["key"]
+        print(request.headers.get("API-Key"))
+        print(lookup_response)
+    except Exception as e:
+        print(e)
+        raise HTTPException(status_code=404, detail="Domain not found")
+
+    return lookup_response == request.headers.get("API-Key")
+```
 
 ---
 
@@ -92,7 +112,6 @@ Endpoint didokumentasikan dengan laman web berbasis HTML, CSS, dan JS yang terse
 ---
 
 ## 🤝 **12. Integrasi dengan Layanan Lain**  
-- **Google Drive API:** Mendukung penyimpanan dan pengelolaan dokumen.  
 - **Spotify Bot:** Widget chatbot untuk mendukung kebutuhan pengguna.  
 
 ![Chatbot](https://github.com/RunningPie/Tubes-TST-2024/blob/main/docs/supporting_images/Chatbot.png)
