@@ -99,7 +99,7 @@ async def signin(
             token = response.session.access_token
             
             fastapi_response = RedirectResponse(url=frontend_url + "/home.html", status_code=302)
-            fastapi_response.set_cookie(key="access_token", value=token, httponly=True)
+            fastapi_response.set_cookie(key="access_token", value=token, httponly=True, samesite=None)
             return fastapi_response
         
         except Exception as e:
