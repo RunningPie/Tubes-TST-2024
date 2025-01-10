@@ -55,12 +55,11 @@ async def request_api_key(request: Request):
         raise HTTPException(status_code=403, detail="Invalid API key")
 
 @supabase_router.post("/user-signup", summary="This is used for user signup with classic email and password")
-async def signup(
-    email: str = Header(...),
-    password: str = Header(...),
-    request: Request
-):
+async def signup(request: Request):
     if validate_api_key(request):
+        email = request.headers.get("email")
+        password = request.headers.get("password")
+        
         if not email or not password:
             raise HTTPException(status_code=400, detail="Email and Password headers are required")
         
@@ -75,11 +74,12 @@ async def signup(
 
 @supabase_router.post("/user-signin", summary="This is used for user signin with classic email and password")
 async def signin(
-    email: str = Header(...),
-    password: str = Header(...),
     request: Request
 ):
     if validate_api_key(request):
+        email = request.headers.get("email")
+        password = request.headers.get("password")
+        
         if not email or not password:
             raise HTTPException(status_code=400, detail="Email and Password headers are required")
         
