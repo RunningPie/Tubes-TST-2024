@@ -22,6 +22,7 @@ Laporan pengembangan dan dokumentasinya bisa diakses di:
 4. [Arsitektur dan Model Proses](#-4-arsitektur-dan-model-proses)  
 5. [Teknologi yang Digunakan](#-5-teknologi-yang-digunakan)  
 6. [Flow Pengembangan](#-6-flow-pengembangan)
+
 -- 🔽🔽 SPEK WAJIB 🔽🔽 --
 7. **[Fitur Utama: Fuzzy Rule Based System (FRBS)](#-7-fitur-utama-fuzzy-rule-based-system-frbs)**
 8. **[Kontainerisasi](#-8-kontainerisasi)**  
@@ -84,7 +85,7 @@ Fitur utama menggunakan fuzzy logic untuk alokasi dan pelacakan tugas:
 - **Fuzzification:** Menentukan nilai derajat keanggotaan.  
 - **Defuzzification:** Menghasilkan output akhir berbasis aturan fuzzy.  
 
-Kode implementasi tersedia di [repository GitHub](https://github.com/RunningPie/Tubes-TST-2024).
+Kode implementasi tersedia di [repository GitHub](https://github.com/RunningPie/Tubes-TST-2024/blob/main/backend/app/services/rule_based_fuzzy_logic.py).
 
 ---
 
