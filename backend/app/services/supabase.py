@@ -83,8 +83,12 @@ async def signin(
     request: Request
 ):
     if validate_api_key(request):
-        email = request.headers.get("email")
-        password = request.headers.get("password")
+        
+        req_body = await request.json()
+        email = req_body['email']
+        password = req_body['password']
+        
+        print(email, password)
         
         if not email or not password:
             raise HTTPException(status_code=400, detail="Email and Password headers are required")
